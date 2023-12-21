@@ -13,7 +13,7 @@ pipeline {
         }
         stage('Build docker image') {
             steps {
-                sh "docker image build -t rajkumar207/jenkinsdec23workshop:$BUILD_ID ."
+                sh "docker image build -t jenkins:$BUILD_ID ."
             }
         }
         stage('Trivy Scan') {
