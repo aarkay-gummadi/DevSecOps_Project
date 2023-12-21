@@ -8,12 +8,12 @@ pipeline {
         }
         stage('Checkout from Git'){
             steps{
-                git branch: 'main', url: 'https://github.com/KhajaWorkshopsAtQT/Dec1623.git'
+                git branch: 'main', url: 'https://github.com/aarkay-gummadi/DevSecOps_workshop_Dec1623-.git'
             }
         }
         stage('Build docker image') {
             steps {
-                sh "docker image build -t shaikkhajaibrahim/jenkinsdec23workshop:$BUILD_ID ."
+                sh "docker image build -t rajkumar207/jenkinsdec23workshop:$BUILD_ID ."
             }
         }
         stage('Trivy Scan') {
