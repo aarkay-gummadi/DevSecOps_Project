@@ -1,77 +1,67 @@
 terraform {
-    required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~>3.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~>3.0"
     }
   }
 }
 
-# Configure the AWS Provider
-provider "aws" {
-  region = "us-west-2"
+provider "azurerm" {
+  features {}
 }
 
 terraform {
-  backend "s3" {
-    bucket         = "fordevsecops1"
-    key            = "workshopdec23.tfstate"
-    region         = "us-west-2"  # Specify the AWS region where your S3 bucket is located
-    encrypt        = true
-    dynamodb_table = "terraform-lock-table"
+  backend "azurerm" {
+    storage_account_name = "idontknowlt"
+    container_name       = "tflock"
+    key                  = "workshopdec23.tfstate"
+    resource_group_name = "DefaultResourceGroup-EUS"
   }
 }
 
-resource "aws_eks_cluster" "example" {
-  name     = "example-eks-cluster"
-  role_arn = aws_iam_role.eks_cluster.arn
+resource "azurerm_resource_group" "example" {
+  name     = "example-resources"
+  location = "East US"
+}
 
-  vpc_config {
-    subnet_ids = aws_subnet.private[*].id
+resource "azurerm_kubernetes_cluster" "example" {
+  name                = "example-aks1"
+  location            = azurerm_resource_group.example.location
+  resource_group_name = azurerm_resource_group.example.name
+  dns_prefix          = "exampleaks1"
+
+  default_node_pool {
+    name       = "default"
+    node_count = 1
+    vm_size    = "Standard_D2_v2"
   }
 
-  depends_on = [aws_iam_role_policy_attachment.eks_cluster]
+  identity {
+    type = "SystemAssigned"
+  }
+
+  tags = {
+    Environment = "Production"
+  }
 }
 
-resource "aws_iam_role" "eks_cluster" {
-  name = "example-eks-cluster"
-  
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [{
-      Action = "sts:AssumeRole",
-      Effect = "Allow",
-      Principal = {
-        Service = "eks.amazonaws.com"
-      }
-    }]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "eks_cluster" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = aws_iam_role.eks_cluster.name
-}
-
-resource "aws_subnet" "private" {
-  count = 2
-  
-  cidr_block = "10.0.${count.index + 1}.0/24"
-}
-
-output "kubeconfig" {
-  value = aws_eks_cluster.example.kubeconfig[*].raw_config
+output "client_certificate" {
+  value = azurerm_kubernetes_cluster.example.kube_config.0.client_certificate
   sensitive = true
 }
 
-resource "null_resource" "get_kube_config" {
-  depends_on = [aws_eks_cluster.example]
 
+resource "null_resource" "get_kube_config" {
   triggers = {
-    cluster_id = aws_eks_cluster.example.id
+    cluster_id = azurerm_kubernetes_cluster.example.id
   }
 
   provisioner "local-exec" {
-    command = "aws eks --region us-east-1 update-kubeconfig --name ${aws_eks_cluster.example.name}"
+    command = "az aks get-credentials --resource-group ${azurerm_resource_group.example.name} --name ${azurerm_kubernetes_cluster.example.name} --overwrite-existing"
   }
 }
