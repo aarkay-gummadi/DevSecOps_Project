@@ -13,7 +13,7 @@ pipeline {
         }
         stage('checkout from Git') {
             steps {
-                git branch: 'main', url: 'https://github.com/rajkumarqt/waytodevsecops.git'
+                git branch: 'main', url: 'https://github.com/aarkay-gummadi/DevSecOps_Project.git'
             }
         }
         stage('Build docker images') {
