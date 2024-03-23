@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
-    bucket = "southbucketforaarkay"
+    bucket = "waytos3"
     key    = "eks/terraform.tfstate"
-    region = "us-west-2"
+    region = "ap-south-1"
   }
 }
