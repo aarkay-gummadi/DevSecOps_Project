@@ -15,7 +15,7 @@ docker info
 ![Preview](Images/jenkins1.png)
 ![Preview](Images/jenkins2.png)
 
-* Clone the github repository to the server [Refer Here](https://github.com/rajkumarqt/ProjectsRelated/tree/main/devsecopsproject) for the project repository.
+* Clone the github repository to the server [Refer Here](https://github.com/aarkay-gummadi/DevSecOps_Project) for the project repository.
 * 
 * To build the docker image run the below command
 ```
