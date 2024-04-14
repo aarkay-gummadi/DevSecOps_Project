@@ -3,7 +3,7 @@ Manual Steps to build the NetFlix application
 ![Preview](Images/jenkins.png)
 * Install docker
 ```
-sudo apt install
+sudo apt update
 curl -fsSL https://get.docker.com -o install-docker.sh
 sh install-docker.sh
 sudo usermod -aG docker ubuntu
