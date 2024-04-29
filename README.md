@@ -1,5 +1,8 @@
 Manual Steps to build the NetFlix application
----------------------------------------
+---------------------------------------------
+
+![Preview](Images/sample_netflix.png)
+
 ![Preview](Images/jenkins.png)
 * Install docker
 ```
@@ -113,7 +116,7 @@ sudo apt-get install trivy
 ![Preview](Images/jenkins14.png)
 
 
-[Refer Here](https://github.com/rajkumarqt/waytodevsecops/blob/main/Jenkinsfile) for the jenkins pipeline code
+[Refer Here](https://github.com/aarkay-gummadi/DevSecOps_Project/blob/main/Jenkinsfile) for the jenkins pipeline code
 
 ![Preview](Images/jenkins20.png)
 ![Preview](Images/jenkins21.png)
